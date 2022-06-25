@@ -16,6 +16,12 @@
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
+  "dependencies": {
+    "@logdna/tail-file": "^2.2.0",
+    "chokidar": "^3.5.3",
+    "obs-websocket-js": "^4.0.3",
+    "sound-play": "^1.1.0"
+  },
   "devDependencies": {
     "electron": "^19.0.4"
   }
