@@ -4,3 +4,10 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
+
+const {ipcRenderer} = require('electron')
+
+ipcRenderer.on('new-video', function (event, arg) {
+    console.log('new video event', event, arg)
+    document.getElementById('new-video').innerHTML = arg.filePath
+})

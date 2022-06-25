@@ -10,10 +10,14 @@ const sound = require("sound-play");
 let tail
 let filesList = [];
 let doFullRead = false;
-
+let window;
 
 function handleNewFile(filePath) {    
     console.log('new file: ', filePath)
+    sound.play('assets/save.mp3')
+    window.webContents.send('new-video', {
+        filePath: filePath
+    })
 }
 
 function parseChunk(chunk) {
@@ -63,7 +67,6 @@ function parseChunk(chunk) {
 
 function fireEvent(eventName, data) {
     if (eventName === 'newFile') {
-	console.log('new file')
         handleNewFile(data);
     }
 }
@@ -72,7 +75,9 @@ function handleEvents(events) {
     for (let event of events) {
 	if (event['message'].indexOf("Wrote replay buffer to ") !== -1) {
 	    let fileName = event['message'].split("Wrote replay buffer to ")[1];
-            fileName = fileName.slice(1, -2);
+            // fileName = fileName.slice(1, -2);
+            fileName = fileName.slice(1, -1);
+
             fireEvent('newFile', fileName);
         }
     }
@@ -110,7 +115,8 @@ function getLatestFilePath() {
 }
 
 
-function initializeOBSLogReader(obsPath) {
+function initializeOBSLogReader(obsPath, win) {
+    window = win
     fs.mkdirSync(obsPath, { recursive: true });
     console.log('chokidar.watch(obsPath)', obsPath);
     chokidar.watch(obsPath, { usePolling: true, }).on('add', (path, details) => {

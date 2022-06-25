@@ -6,8 +6,12 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    nodeIntegration: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     }
   })
 
@@ -16,7 +20,7 @@ function createWindow () {
   const { initializeOBSLogReader } = require( './obsLogReader')
 
   const obsPathMac = '/Users/naman/Library/Application Support/obs-studio/logs'
-  initializeOBSLogReader(obsPathMac)
+  initializeOBSLogReader(obsPathMac, mainWindow)
 
 }
 
