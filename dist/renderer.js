@@ -7,7 +7,6 @@
 // needed in the renderer process.
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const LIVEPEER_API_KEY = "96723baa-ee6f-4c6b-869b-0a110f8e27a6";
 electron_1.ipcRenderer.on('new-video', function (event, arg) {
     console.log('new video event', event, arg);
     document.getElementById('new-video').innerHTML = "New clip: " + arg.filePath;

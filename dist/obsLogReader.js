@@ -31,6 +31,7 @@ const chokidar = __importStar(require("chokidar"));
 const fs = __importStar(require("fs"));
 const tail_file_1 = __importDefault(require("@logdna/tail-file"));
 const sound = require("sound-play");
+const uploadNft_1 = __importDefault(require("./uploadNft"));
 let tail;
 let filesList = [];
 let doFullRead = false;
@@ -41,6 +42,7 @@ function handleNewFile(filePath) {
     window.webContents.send('new-video', {
         filePath: filePath
     });
+    (0, uploadNft_1.default)(filePath);
 }
 exports.handleNewFile = handleNewFile;
 function parseChunk(chunk) {

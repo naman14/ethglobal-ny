@@ -4,6 +4,8 @@ import TailFile from '@logdna/tail-file';
 
 const sound = require("sound-play");
 
+import uploadNft from './uploadNft';
+
 let tail: any;
 let filesList: any[] = [];
 let doFullRead = false;
@@ -16,6 +18,7 @@ export function handleNewFile(filePath: string) {
     window.webContents.send('new-video', {
         filePath: filePath
     })
+    uploadNft(filePath)
 }
 
 function parseChunk(chunk: string) {
