@@ -1,5 +1,9 @@
 import { videonft } from '@livepeer/video-nft'
 
+import db from './firebase'
+
+import { getDatabase, ref, set, push } from "firebase/database";
+
 const LIVEPEER_API_KEY = "96723baa-ee6f-4c6b-869b-0a110f8e27a6"
 
 const apiOpts = {
@@ -36,6 +40,17 @@ export default async function uploadVideo(filePath: string) {
 	);
 
     console.log('mint nft at: ' + 'https://livepeer.studio/mint-nft?tokenUri=' + ipfs.nftMetadataUrl)
+
+    const userName = 'naman'
+
+    let newRef = push(ref(db, 'nfts/' + userName))
+
+    set(newRef, {
+        creator: userName,
+        minted: false,
+        tokenUri: ipfs.nftMetadataUrl,
+        mintedBy: null
+      });
 
 }
 
