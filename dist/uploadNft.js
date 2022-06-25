@@ -1,6 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const video_nft_1 = require("@livepeer/video-nft");
+const firebase_1 = __importDefault(require("./firebase"));
+const database_1 = require("firebase/database");
 const LIVEPEER_API_KEY = "96723baa-ee6f-4c6b-869b-0a110f8e27a6";
 const apiOpts = {
     auth: { apiKey: LIVEPEER_API_KEY },
@@ -23,6 +28,14 @@ async function uploadVideo(filePath) {
     let ipfs = await sdk.exportToIPFS(asset.id, nftMetadata, printProgress);
     console.log(`Export successful! Result: \n${JSON.stringify(ipfs, null, 2)}`);
     console.log('mint nft at: ' + 'https://livepeer.studio/mint-nft?tokenUri=' + ipfs.nftMetadataUrl);
+    const userName = 'naman';
+    let newRef = (0, database_1.push)((0, database_1.ref)(firebase_1.default, 'nfts/' + userName));
+    (0, database_1.set)(newRef, {
+        creator: userName,
+        minted: false,
+        tokenUri: ipfs.nftMetadataUrl,
+        mintedBy: null
+    });
 }
 exports.default = uploadVideo;
 function printProgress(progress) {

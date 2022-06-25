@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getStreamStatus = exports.createStream = void 0;
 const axios_1 = __importDefault(require("axios"));
 const apiInstance = axios_1.default.create({
-    baseURL: "/api/",
+    baseURL: "https://livepeer.com/api/",
     timeout: 10000,
 });
 const createStream = (apiKey, name) => {

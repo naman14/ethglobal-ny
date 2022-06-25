@@ -39,7 +39,8 @@ export default async function uploadVideo(filePath: string) {
 		`Export successful! Result: \n${JSON.stringify(ipfs, null, 2)}`
 	);
 
-    console.log('mint nft at: ' + 'https://livepeer.studio/mint-nft?tokenUri=' + ipfs.nftMetadataUrl)
+    const mintUrl = 'https://livepeer.studio/mint-nft?tokenUri=' + ipfs.nftMetadataUrl
+    console.log('mint nft at: ' + mintUrl)
 
     const userName = 'naman'
 
@@ -51,6 +52,9 @@ export default async function uploadVideo(filePath: string) {
         tokenUri: ipfs.nftMetadataUrl,
         mintedBy: null
       });
+
+    let newChatRef = push(ref(db, 'chats/' + userName))
+    set(newChatRef, 'NFT dropped!. Mint now at: ' + mintUrl);
 
 }
 

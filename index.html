@@ -13,12 +13,12 @@
       <input type="text" id="sname" name="sname"><br>
 
       <label for="freefor">Free for: (minutes)</label><br>
-      <input type="number" id="freefor" name="freefor"><br>
+      <input type="number" step="any" id="freefor" name="freefor"><br>
 
       <label for="sprice">Stream price: (DAI per minute)</label><br>
-      <input type="number" id="sprice" name="sprice"><br>
+      <input type="number" step="any" id="sprice" name="sprice"><br>
     
-      <input type="submit" value="Start streaming">
+      <input type="submit" value="Start streaming" onclick="startStream()">
 
 
     </form>
@@ -26,7 +26,11 @@
     <div id="stream-key-details-container" style="visibility: hidden;">
       <h3>Stream is ready. Enter the following RTMP url and stream key in OBS to start streaming</h3>
       <p>url: rtmp://rtmp.livepeer.com/live</p>
-      <p id="stream-key"></p>
+
+      <div style="display: flex; justify-content: start">
+        <p style="">Stream key: </p>
+        <p style="" id="stream-key"></p>
+      </div>
     </div>
 
 
@@ -34,10 +38,10 @@
 
     <form>
       <label for="mprice">Mint price (ETH)</label><br>
-      <input type="number" id="mprice" name="mprice"><br>
+      <input type="number" step="any" id="mprice" name="mprice"><br>
 
       <label for="freefornft">NFT holder bonus watch time: (minutes)</label><br>
-      <input type="number" id="freefornft" name="freefornft"><br>
+      <input type="number" step="any" id="freefornft" name="freefornft"><br>
 
     </form>
 

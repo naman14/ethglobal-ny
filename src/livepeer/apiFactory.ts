@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiInstance = axios.create({
-  baseURL: "/api/",
+  baseURL: "https://livepeer.com/api/",
   timeout: 10000,
 });
 
