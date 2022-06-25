@@ -5,11 +5,11 @@ const apiInstance = axios.create({
   timeout: 10000,
 });
 
-export const createStream = (apiKey: string): Promise<any> => {
+export const createStream = (apiKey: string, name: string): Promise<any> => {
   return apiInstance.post(
     "/stream",
     {
-      name: "test_stream",
+      name: name,
       profiles: [
         {
           name: "720p",

@@ -1,15 +1,21 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "noImplicitAny": true,
-      "sourceMap": true,
-      "outDir": "dist",
-      "baseUrl": ".",
-      "paths": {
-        "*": ["node_modules/*"]
-      }
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "CommonJS",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
     },
-    "include": [
-      "src/**/*"
-    ]
-  }
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
-    <link href="./styles.css" rel="stylesheet">
+    <meta charset="UTF-8" />
     <title>Hello World!</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
+    <h1>Switch</h1>
+
+    <form>
+      <label for="sname">Stream title:</label><br>
+      <input type="text" id="sname" name="sname"><br>
+
+      <label for="freefor">Free for: (minutes)</label><br>
+      <input type="number" id="freefor" name="freefor"><br>
+
+      <label for="sprice">Stream price: (DAI per second)</label><br>
+      <input type="number" id="sprice" name="sprice"><br>
+    
+    </form>
 
     <p id="new-video"></p>
+
     <!-- You can also require other files to run in this process -->
-    <script src="./renderer.js">
-   </script> 
-    </body>
+    <script>var exports = {};</script>
+    <script src="./dist/renderer.js"></script>
+  </body>
 </html>

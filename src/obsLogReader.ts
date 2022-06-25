@@ -1,18 +1,16 @@
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.doFullReads = exports.initializeOBSLogReader = exports.handleNewFile = void 0;
-
-var chokidar = require('chokidar');
-var fs = require('fs');
-var TailFile = require('@logdna/tail-file');
+import * as chokidar from 'chokidar';
+import * as fs from 'fs';
+import TailFile from '@logdna/tail-file';
 
 const sound = require("sound-play");
 
-let tail
-let filesList = [];
+let tail: any;
+let filesList: any[] = [];
 let doFullRead = false;
-let window;
+let window:any;
 
-function handleNewFile(filePath) {    
+
+export function handleNewFile(filePath: string) {    
     console.log('new file: ', filePath)
     sound.play('assets/save.mp3')
     window.webContents.send('new-video', {
@@ -20,9 +18,9 @@ function handleNewFile(filePath) {
     })
 }
 
-function parseChunk(chunk) {
+function parseChunk(chunk: string) {
     let lines = chunk.split('\n');
-    let splitLine;
+    let splitLine: string[];
     let timeStamp;
     let message;
     let events = [];
@@ -67,23 +65,23 @@ function parseChunk(chunk) {
 
 function fireEvent(eventName, data) {
     if (eventName === 'newFile') {
+	console.log('new file')
         handleNewFile(data);
     }
 }
 
-function handleEvents(events) {
+function handleEvents(events: any[]) {
     for (let event of events) {
 	if (event['message'].indexOf("Wrote replay buffer to ") !== -1) {
 	    let fileName = event['message'].split("Wrote replay buffer to ")[1];
             // fileName = fileName.slice(1, -2);
             fileName = fileName.slice(1, -1);
-
             fireEvent('newFile', fileName);
         }
     }
 }
 
-function startTail(filePath) {
+function startTail(filePath: string) {
     const newTail = new TailFile(filePath, { encoding: 'utf8' });
     newTail.on('data', (chunk) => {
         let events = parseChunk(chunk);
@@ -115,9 +113,10 @@ function getLatestFilePath() {
 }
 
 
-function initializeOBSLogReader(obsPath, win) {
-    window = win
+export function initializeOBSLogReader(
+    obsPath: string,win: any) {
     fs.mkdirSync(obsPath, { recursive: true });
+    window = win;
     console.log('chokidar.watch(obsPath)', obsPath);
     chokidar.watch(obsPath, { usePolling: true, }).on('add', (path, details) => {
         filesList.push({ path: path, details: details });
@@ -126,7 +125,6 @@ function initializeOBSLogReader(obsPath, win) {
         }
         let filePath = getLatestFilePath()
         console.log('latest file', filePath);
-        // mwin.send('latest-file-found', filePath)
         //doFullRead = true;
         if (doFullRead) {
             const data = fs.readFileSync(filePath, 'utf8');
@@ -137,8 +135,6 @@ function initializeOBSLogReader(obsPath, win) {
     });
 }
 
-exports.initializeOBSLogReader = initializeOBSLogReader;
-
-function doFullReads() {
+export function doFullReads() {
     doFullRead = true;
 }
