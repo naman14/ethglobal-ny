@@ -2,6 +2,10 @@ import { initializeApp, } from "https://www.gstatic.com/firebasejs/9.8.4/firebas
 
 import { get, ref, getDatabase, onValue } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.4/firebase-database.min.js"
 
+import * as superfluid from 'https://cdn.skypack.dev/pin/@superfluid-finance/sdk-core@v0.4.2-IVr6JAGzcFoFBoUZkPy5/mode=imports/optimized/@superfluid-finance/sdk-core.js'
+
+import { ethers } from "https://cdn.ethers.io/lib/ethers-5.2.esm.min.js";
+
 const LIVEPEER_API_KEY = "96723baa-ee6f-4c6b-869b-0a110f8e27a6"
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -12,10 +16,12 @@ console.log('user: ' + username)
 let db;
 let currentNft;
 
-initialiseDB()
-fetchStream(username)
-watchNftDrops()
-watchChat()
+// initialiseDB()
+// fetchStream(username)
+// watchNftDrops()
+// watchChat()
+
+setupSuperfluid()
 
 function initialiseDB() {
     const firebaseConfig = {
@@ -34,6 +40,44 @@ function initialiseDB() {
       console.log('initialised')
 
 }
+
+async function setupSuperfluid() {
+    const config = {
+        hostAddress: "0x3E14dC1b13c488a8d5D310918780c983bD5982E7",
+        cfaV1Address: "0x6EeE6060f715257b970700bc2656De21dEdF074C",
+        idaV1Address: "0xB0aABBA4B2783A72C52956CDEF62d438ecA2d7a1"
+      };
+      
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const sf = await superfluid.Framework.create({
+        networkName: "polygon-mumbai",
+        provider: provider
+      });
+
+    const signer = sf.createSigner({ web3Provider: provider });
+
+    const paymentAddress = "0xCE9F8B4E91582bFF8cD4C2eB0C811e918779715a"
+    const supertokenAddress = "0x96b82b65acf7072efeb00502f45757f254c2a0d4"
+    const cfa = sf.cfaV1
+    console.log(cfa)
+
+    const maticx = await sf.loadSuperToken(supertokenAddress)
+
+    const approveOp = maticx.approve({ receiver: paymentAddress, amount: "10000" });
+
+    const createFlowOperation = sf.cfaV1.createFlow({
+        sender: "0x16b1025cD1A83141bf93E47dBC316f34f27f2e76",
+        receiver: "0xCE9F8B4E91582bFF8cD4C2eB0C811e918779715a",
+        superToken: "0x96b82b65acf7072efeb00502f45757f254c2a0d4",
+        flowRate: "1000000000"
+      });
+    const batchCall = sf.batchCall([approveOp, createFlowOperation]);
+    const txn = await batchCall.exec(signer);
+    const txnReceipt = await txn.wait();
+    console.log(txnReceipt)
+}
+
+    
 
 function fetchStream(username) {
 
