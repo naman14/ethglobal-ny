@@ -62,6 +62,7 @@ function checkStream() {
 
 function startStream() {
     console.log('starting stream')
+    document.getElementById('stream-button').innerHTML = 'Starting stream...'
     createStream(LIVEPEER_API_KEY, "Naman Switch stream").then((response) => {
         console.log(response.data)
 
@@ -77,7 +78,7 @@ function startStream() {
             streamKey: data.streamKey,
             playbackId: data.playbackId,
             createdAt: data.createdAt,
-            title: (document.getElementById('sname') as HTMLInputElement)!.value,
+            title: 'Stream by ' + (document.getElementById('waddress') as HTMLInputElement)!.value,
             price: (document.getElementById('sprice') as HTMLInputElement)!.value,
             freefor: (document.getElementById('freefor') as HTMLInputElement)!.value,
             freefornft: (document.getElementById('freefornft') as HTMLInputElement)!.value,
@@ -89,6 +90,8 @@ function startStream() {
 
         document.getElementById('stream-key-details-container').style.visibility = 'visible'
         document.getElementById('stream-key').innerHTML = data.streamKey
+        document.getElementById('stream-button').innerHTML = 'Stream started'
+
     })
 }
 

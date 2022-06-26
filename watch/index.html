@@ -9,15 +9,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
 
+    <script src="https://unpkg.com/@livepeer/video-nft@0.3.2/dist/index.umd.js"></script>
+
   </head>
   
-  <body style="font-family: 'Chakra Petch', sans-serif; background-color: grey;">
+  <body style="font-family: 'Chakra Petch', sans-serif; background-color: grey; color: white;">
 
     <div style="flex-direction: row; display: flex; margin: 20px;">
     
         <div style="flex-direction: column; display: flex; background: #0E0F18;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-        border-radius: 24px;">
+        margin: 0px;
+        border-radius: 24px; height: 600px;">
 
 
             <video
@@ -124,15 +127,12 @@
                
             </div>
 
-            <div>
-                <h2>NFT Drops</h2>
-            </div>
         </div>
        
 
       <div style="
       width: 373px;
-      height: 596px;
+      height: 560px;
       margin-left: 20px;
       
       background: #0E0F18;
@@ -150,10 +150,44 @@
           text-transform: uppercase;
           
           color: #FFFFFF;">Live Chat</h2>
+
+
+            <a><p style="white-space: pre-line" id='chat-messages'></p></a>
       </div>
 
     </div>
   
+    <div style="margin-left: 20px;">
+
+        <div style="width: 770px;
+
+        height: 120px;
+        
+        background: #0E0F18;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 24px; padding-left: 20px; padding-top: 5px; padding-bottom: 5px;
+        flex-direction: row; display: flex;
+         ">
+        
+        <div style="width: 600px; height: 120px;justify-content: center; display: flex; flex-direction: column;">
+            <h2 id='nft-title' style="margin: 0px;">NFT #1</h2>
+            <p style="color: #636895; margin: 0px;">Dropped 60s ago</p>
+            <h4 style="margin: 0px; margin-top: 10px;">+ 5 mins extra watch time by minting this nft</h4>
+        </div>
+           
+        <button 
+        id="mint-nft-button"
+        style="width: 119px;
+        height: 45px;
+        margin-right: 15px;
+        justify-content: center;    
+        margin-top: 35px;
+            background-color: #4A7DFF;
+        background: linear-gradient(90.07deg, #3999F9 29.06%, #4A7DFF 96.96%);
+
+        border-radius: 12px; outline: none; outline: none; border: 0; color: white; font-size: 18px;">Mint now</button>
+        </div>
+    </div>
   
     <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
 

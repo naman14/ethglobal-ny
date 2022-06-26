@@ -1,6 +1,6 @@
 import { initializeApp, } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
 
-import { get, ref, getDatabase } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.4/firebase-database.min.js"
+import { get, ref, getDatabase, onValue } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.4/firebase-database.min.js"
 
 const LIVEPEER_API_KEY = "96723baa-ee6f-4c6b-869b-0a110f8e27a6"
 
@@ -10,9 +10,12 @@ const username = urlParams.get('u');
 console.log('user: ' + username)
 
 let db;
+let currentNft;
 
 initialiseDB()
 fetchStream(username)
+watchNftDrops()
+watchChat()
 
 function initialiseDB() {
     const firebaseConfig = {
@@ -37,6 +40,7 @@ function fetchStream(username) {
     console.log(db)
     console.log('checking active streams')
 
+    return
     get(ref(db, 'activeStreams/' + username)).then((snapshot) => {
         console.log(snapshot)
         if (snapshot.exists()) {
@@ -47,7 +51,7 @@ function fetchStream(username) {
         
           console.log('checking stream status')
 
-          get(ref(db, 'activeStreams/' + username + '/' + streamId)).then((snapshot) => {
+          get(ref(db, 'streams/' + username + '/' + streamId)).then((snapshot) => {
 
             let streamInfo = snapshot.val()
             
@@ -55,36 +59,27 @@ function fetchStream(username) {
             document.getElementById('sprice-text').innerHTML = streamInfo.price + ' Ξ/min'
             document.getElementById('nft-count-text').innerHTML = '1'
 
-            return
-
             getStreamStatus(LIVEPEER_API_KEY, streamId).then((response) => {
                 console.log(response.data)
     
                   let data = response.data
 
                   var video = videojs("video");
+                
+                  const playbackUrl = `https://livepeercdn.com/hls/${data.playbackId}/index.m3u8`
+                  console.log('playback url: ' + playbackUrl)
 
                     video.src({
-                        type: 'video/mp4',
-                        src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                        type: 'application/x-mpegURL',
+                        src: playbackUrl
                       });
 
-                    // source.setAttribute('src', `https://livepeercdn.com/hls/${data.playbackId}/index.m3u8`);
-                    // source.setAttribute('src', `http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8`);
-
-                    // source.setAttribute('type', 'application/x-mpegURL');
-
-                    // video.appendChild(source);
-
-                // document.getElementById('stream-title').innerHTML = streamInfo.title
+                document.getElementById('stream-title').innerHTML = streamInfo.title
               })
 
           }).catch((error) => {
             console.error(error);
         });
-
-       
-          
 
         } else {
           console.log("No data available");
@@ -92,6 +87,100 @@ function fetchStream(username) {
       }).catch((error) => {
         console.error(error);
       });
+}
+
+function watchNftDrops() {
+    const nftRef = ref(db, 'nfts/' + username);
+    onValue(nftRef, (snapshot) => {
+
+      const data = snapshot.val()
+        
+      if (!data) return
+
+      console.log(data)
+      
+      let found = false
+      Object.values(data).forEach((nft) => {
+        if (!found) {
+            found = true
+            currentNft = nft
+        }
+      })
+      
+      let minted = currentNft.minted
+
+      if (!minted) {
+        document.getElementById('mint-nft-button').innerHTML = 'Mint now'
+        document.getElementById('mint-nft-button').style.backgroundColor = '#4A7DFF'
+
+      } else {
+        document.getElementById('mint-nft-button').innerHTML = 'Minted by ' + currentNft.mintedBy
+        document.getElementById('mint-nft-button').style.backgroundColor = '#0E0F18'
+      }
+    });
+}
+
+function watchChat() {
+    const nftRef = ref(db, 'chats/' + username);
+    onValue(nftRef, (snapshot) => {
+
+      const data = snapshot.val()
+        
+      if (!data) return
+
+      console.log(data)
+      let text = ''
+
+      Object.values(data).forEach((message) => {
+        text = text + '\n\n' + message
+      })
+      
+      document.getElementById('chat-messages').innerHTML = text
+    });
+}
+
+document.getElementById('mint-nft-button').addEventListener('click', function() {
+    
+    mintNft()
+ }, false);
+
+
+async function mintNft() {
+    if (currentNft && currentNft.minted) {
+        window.open(currentNft.openseaUrl, '_blank').focus();
+    } else {
+        console.log('minting nft')
+        document.getElementById('mint-nft-button').innerHTML = 'Minting...'
+
+        const apiOpts = {
+            auth: { apiKey: LIVEPEER_API_KEY },
+            // defaults to current origin if not specified
+            endpoint: videonft.api.prodApiEndpoint
+          };
+        const minter = videonft.minter
+        const uploader = new minter.Uploader();
+        const sdk = new minter.Api(apiOpts);
+
+        const web3 = new videonft.minter.FullMinter({}, { ethereum, chainId: 80001 }).web3;
+
+        console.log(web3)
+
+        let ipfsUrl = currentNft.tokenUri
+
+        const tx = await web3.mintNft(ipfsUrl);
+        const nftInfo = await web3.getMintedNftInfo(tx);
+        console.log(`minted NFT on contract ${nftInfo.contractAddress} with ID ${nftInfo.tokenId}`);
+
+        set(ref(db, 'nfts/' + username), {
+            creator: currentNft.creator,
+            minted: true,
+            tokenUri: ipfs.nftMetadataUrl,
+            nftInfo: nftInfo
+        });
+
+        let newChatRef = push(ref(db, 'chats/' + username))
+        set(newChatRef, 'NFT minted! '+ nftInfo.opensea.tokenUrl);
+    }
 }
 
 import "https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js";

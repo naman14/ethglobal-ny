@@ -36,7 +36,6 @@ function checkStream() {
                 let data = response.data;
                 document.getElementById('stream-key-details-container').style.visibility = 'visible';
                 document.getElementById('stream-key').innerHTML = data.streamKey;
-                document.getElementById('stream-button').style.visibility = 'hidden';
                 //   if (data.isActive) {
                 //   } else {
                 //     document.getElementById('stream-key-details-container').style.visibility =  'hidden'
@@ -52,6 +51,7 @@ function checkStream() {
 }
 function startStream() {
     console.log('starting stream');
+    document.getElementById('stream-button').innerHTML = 'Starting stream...';
     (0, exports.createStream)(LIVEPEER_API_KEY, "Naman Switch stream").then((response) => {
         console.log(response.data);
         let data = response.data;
@@ -63,7 +63,7 @@ function startStream() {
             streamKey: data.streamKey,
             playbackId: data.playbackId,
             createdAt: data.createdAt,
-            title: document.getElementById('sname').value,
+            title: 'Stream by ' + document.getElementById('waddress').value,
             price: document.getElementById('sprice').value,
             freefor: document.getElementById('freefor').value,
             freefornft: document.getElementById('freefornft').value,
