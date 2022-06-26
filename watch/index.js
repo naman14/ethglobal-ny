@@ -12,68 +12,66 @@ fetchStream(username)
 
 
 function fetchStream(username) {
-    var video = videojs("video");
-
-    video.src({
-        type: 'video/mp4',
-        src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-      });
-
-    //   var video = document.getElementById('video');
-    //   var videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-    //   var hls = new Hls();
-    //   hls.loadSource(videoSrc);
-    //   hls.attachMedia(video);
 
     console.log('checking active streams')
-    // get(ref(window.db, 'activeStreams/' + username)).then((snapshot) => {
-    //     if (snapshot.exists()) {
-    //       console.log(snapshot.val());
-        
-    //       let streamId = snapshot.val()
-    //       console.log(streamId)
-        
-    //       console.log('checking stream status')
-
-    //       get(ref(window.db, 'activeStreams/' + username + '/' + streamId)).then((snapshot) => {
-
-    //         let streamInfo = snapshot.val()
-
-    //         getStreamStatus(LIVEPEER_API_KEY, streamId).then((response) => {
-    //             console.log(response.data)
+    let ref = ref(window.db, 'activeStreams/' + username)
+    console.log(ref)
     
-    //               let data = response.data
+    get(ref).then((snapshot) => {
+        console.log(snapshot)
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+        
+          let streamId = snapshot.val()
+          console.log(streamId)
+        
+          console.log('checking stream status')
 
-    //               var video = videojs("video");
+          get(ref(window.db, 'activeStreams/' + username + '/' + streamId)).then((snapshot) => {
 
-    //                 video.src({
-    //                     type: 'video/mp4',
-    //                     src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-    //                   });
+            let streamInfo = snapshot.val()
+            
+            document.getElementById('freefor-text').innerHTML = streamInfo.freefor + ' minutes'
+            document.getElementById('sprice-text').innerHTML = streamInfo.price + ' Ξ/min'
+            document.getElementById('nft-count-text').innerHTML = '1'
 
-    //                 // source.setAttribute('src', `https://livepeercdn.com/hls/${data.playbackId}/index.m3u8`);
-    //                 // source.setAttribute('src', `http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8`);
+            return
 
-    //                 // source.setAttribute('type', 'application/x-mpegURL');
+            getStreamStatus(LIVEPEER_API_KEY, streamId).then((response) => {
+                console.log(response.data)
+    
+                  let data = response.data
 
-    //                 // video.appendChild(source);
+                  var video = videojs("video");
 
-    //             // document.getElementById('stream-title').innerHTML = streamInfo.title
-    //           })
+                    video.src({
+                        type: 'video/mp4',
+                        src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                      });
 
-    //       }).catch((error) => {
-    //         console.error(error);
-    //     });
+                    // source.setAttribute('src', `https://livepeercdn.com/hls/${data.playbackId}/index.m3u8`);
+                    // source.setAttribute('src', `http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8`);
+
+                    // source.setAttribute('type', 'application/x-mpegURL');
+
+                    // video.appendChild(source);
+
+                // document.getElementById('stream-title').innerHTML = streamInfo.title
+              })
+
+          }).catch((error) => {
+            console.error(error);
+        });
 
        
           
 
-    //     } else {
-    //       console.log("No data available");
-    //     }
-    //   }).catch((error) => {
-    //     console.error(error);
-    //   });
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
 }
 
 import "https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js";
