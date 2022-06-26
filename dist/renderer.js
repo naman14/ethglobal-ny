@@ -19,6 +19,12 @@ const userName = 'naman';
 electron_1.ipcRenderer.on('new-video', function (event, arg) {
     console.log('new video event', event, arg);
     document.getElementById('new-video').innerHTML = "New clip: " + arg.filePath;
+    document.getElementById('drop-nft-title').innerHTML = "Hotkey pressed, Dropping NFT...";
+    document.getElementById('drop-nft-title').style.color = "#DC7B7B";
+    setTimeout(() => {
+        document.getElementById('drop-nft-title').innerHTML = "Drop NFTs";
+        document.getElementById('drop-nft-title').style.color = "#ffffff";
+    }, 10000);
 });
 let db;
 initialiseDB();
@@ -73,6 +79,9 @@ function startStream() {
         (0, database_1.set)((0, database_1.ref)(db, 'activeStreams/' + userName), data.id);
         document.getElementById('stream-key-details-container').style.visibility = 'visible';
         document.getElementById('stream-key').innerHTML = data.streamKey;
+        document.getElementById('stream-button').innerHTML = 'Stream started';
+        let newChatRef = (0, database_1.push)((0, database_1.ref)(db, 'chats/' + userName));
+        (0, database_1.set)(newChatRef, 'Welcome to stream!');
     });
 }
 const axios_1 = __importDefault(require("axios"));

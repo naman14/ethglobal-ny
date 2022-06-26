@@ -1,6 +1,6 @@
 import { initializeApp, } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
 
-import { get, ref, getDatabase, onValue } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.4/firebase-database.min.js"
+import { get, ref, getDatabase, onValue, push, set } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.4/firebase-database.min.js"
 
 import * as superfluid from 'https://cdn.skypack.dev/pin/@superfluid-finance/sdk-core@v0.4.2-IVr6JAGzcFoFBoUZkPy5/mode=imports/optimized/@superfluid-finance/sdk-core.js'
 
@@ -15,10 +15,13 @@ console.log('user: ' + username)
 
 let db;
 let currentNft;
+let nftNo;
 let streamInfo;
 let sf;
 let provider;
 let signer;
+let video;
+let paid = false;
 
 const paymentAddress = "0xCE9F8B4E91582bFF8cD4C2eB0C811e918779715a"
 const supertokenAddress = "0x96b82b65acf7072efeb00502f45757f254c2a0d4"
@@ -57,8 +60,6 @@ async function initialiseSuperfluid() {
 
     signer = sf.createSigner({ web3Provider: provider });
 
-    setupPaywall()
-
 }
 
 document.getElementById('subscribe-button').addEventListener('click', function() {
@@ -88,6 +89,8 @@ async function startSuperfluidStream() {
     set(newChatRef, 'New payment subscription!: ' + '0x16b1025cD1A83141bf93E47dBC316f34f27f2e76');
 
     document.getElementById('paywall-overlay').style.visibility = 'hidden'
+
+    paid = true
 }
 
     
@@ -121,7 +124,7 @@ function fetchStream(username) {
     
                   let data = response.data
 
-                  var video = videojs("video");
+                  video = videojs("video");
                 
                   const playbackUrl = `https://livepeercdn.com/hls/${data.playbackId}/index.m3u8`
                   console.log('playback url: ' + playbackUrl)
@@ -132,9 +135,11 @@ function fetchStream(username) {
                       });
 
                 document.getElementById('stream-title').innerHTML = streamInfo.title
+
+                setupPaywall()
+
               })
 
-              setupPaywall()
 
           }).catch((error) => {
             console.error(error);
@@ -160,11 +165,20 @@ async function setupPaywall() {
 
     // console.log(flowInfo)
 
-    let freeTime =  streamInfo.freefor
+    video.on('playing', () => {
+        console.log('on play')
+        let freeTime =  streamInfo.freefor
 
-    setTimeout(() => {
-        document.getElementById('paywall-overlay').style.visibility = 'visible'
-    }, Number(freeTime) * 60 * 1000)
+        if (!paid) {
+            setTimeout(() => {
+                if (!paid) {
+                    document.getElementById('paywall-overlay').style.visibility = 'visible'
+                }
+            }, Number(freeTime) * 60 * 1000)
+        }
+        
+    })
+
 }
 
 function watchNftDrops() {
@@ -178,6 +192,8 @@ function watchNftDrops() {
       console.log(data)
       
       let found = false
+      nftNo = Object.values(data).length
+
       Object.values(data).forEach((nft) => {
         if (!found) {
             found = true
@@ -187,7 +203,10 @@ function watchNftDrops() {
       
       let minted = currentNft.minted
 
+    document.getElementById('nft-title').innerHTML = `NFT #${nftNo}`
+
       if (!minted) {
+        document.getElementById('nft-container').style.visibility = 'visible'
         document.getElementById('mint-nft-button').innerHTML = 'Mint now'
         document.getElementById('mint-nft-button').style.backgroundColor = '#4A7DFF'
 

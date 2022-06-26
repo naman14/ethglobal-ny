@@ -19,6 +19,15 @@ const userName = 'naman'
 ipcRenderer.on('new-video', function (event, arg) {
     console.log('new video event', event, arg)
     document.getElementById('new-video').innerHTML = "New clip: " + arg.filePath
+
+    document.getElementById('drop-nft-title').innerHTML = "Hotkey pressed, Dropping NFT..."
+    document.getElementById('drop-nft-title').style.color = "#DC7B7B"
+
+    setTimeout(() => {
+        document.getElementById('drop-nft-title').innerHTML = "Drop NFTs"
+        document.getElementById('drop-nft-title').style.color = "#ffffff"
+    }, 10000)
+
 })
 
 let db: any
@@ -91,6 +100,9 @@ function startStream() {
         document.getElementById('stream-key-details-container').style.visibility = 'visible'
         document.getElementById('stream-key').innerHTML = data.streamKey
         document.getElementById('stream-button').innerHTML = 'Stream started'
+
+        let newChatRef = push(ref(db, 'chats/' + userName))
+        set(newChatRef, 'Welcome to stream!');
 
     })
 }
