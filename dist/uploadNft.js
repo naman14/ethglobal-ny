@@ -27,7 +27,8 @@ async function uploadVideo(filePath) {
     };
     let ipfs = await sdk.exportToIPFS(asset.id, nftMetadata, printProgress);
     console.log(`Export successful! Result: \n${JSON.stringify(ipfs, null, 2)}`);
-    console.log('mint nft at: ' + 'https://livepeer.studio/mint-nft?tokenUri=' + ipfs.nftMetadataUrl);
+    const mintUrl = 'https://livepeer.studio/mint-nft?tokenUri=' + ipfs.nftMetadataUrl;
+    console.log('mint nft at: ' + mintUrl);
     const userName = 'naman';
     let newRef = (0, database_1.push)((0, database_1.ref)(firebase_1.default, 'nfts/' + userName));
     (0, database_1.set)(newRef, {
@@ -36,6 +37,8 @@ async function uploadVideo(filePath) {
         tokenUri: ipfs.nftMetadataUrl,
         mintedBy: null
     });
+    let newChatRef = (0, database_1.push)((0, database_1.ref)(firebase_1.default, 'chats/' + userName));
+    (0, database_1.set)(newChatRef, 'NFT dropped!. Mint now at: ' + mintUrl);
 }
 exports.default = uploadVideo;
 function printProgress(progress) {

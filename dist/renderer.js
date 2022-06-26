@@ -36,6 +36,7 @@ function checkStream() {
                 let data = response.data;
                 document.getElementById('stream-key-details-container').style.visibility = 'visible';
                 document.getElementById('stream-key').innerHTML = data.streamKey;
+                document.getElementById('stream-button').style.visibility = 'hidden';
                 //   if (data.isActive) {
                 //   } else {
                 //     document.getElementById('stream-key-details-container').style.visibility =  'hidden'
@@ -54,7 +55,7 @@ function startStream() {
     (0, exports.createStream)(LIVEPEER_API_KEY, "Naman Switch stream").then((response) => {
         console.log(response.data);
         let data = response.data;
-        let newRef = (0, database_1.push)((0, database_1.ref)(db, 'streams/' + userName));
+        let newRef = (0, database_1.child)((0, database_1.ref)(db, 'streams/' + userName), data.id);
         (0, database_1.set)(newRef, {
             creator: userName,
             active: true,
@@ -66,7 +67,8 @@ function startStream() {
             price: document.getElementById('sprice').value,
             freefor: document.getElementById('freefor').value,
             freefornft: document.getElementById('freefornft').value,
-            mintPrice: document.getElementById('mprice').value
+            mintPrice: document.getElementById('mprice').value,
+            paymentAddress: document.getElementById('waddress').value
         });
         (0, database_1.set)((0, database_1.ref)(db, 'activeStreams/' + userName), data.id);
         document.getElementById('stream-key-details-container').style.visibility = 'visible';

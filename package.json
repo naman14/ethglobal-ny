@@ -29,6 +29,7 @@
   "dependencies": {
     "@livepeer/video-nft": "^0.3.6",
     "@logdna/tail-file": "^2.2.0",
+    "@superfluid-finance/sdk-core": "^0.4.2",
     "axios": "^0.27.2",
     "chokidar": "^3.5.3",
     "firebase": "^9.8.4",

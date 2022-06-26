@@ -69,7 +69,7 @@ function startStream() {
         
 
         let newRef = child(ref(db, 'streams/' + userName), data.id)
-        
+
         set(newRef, {
             creator: userName,
             active: true,
@@ -81,7 +81,8 @@ function startStream() {
             price: (document.getElementById('sprice') as HTMLInputElement)!.value,
             freefor: (document.getElementById('freefor') as HTMLInputElement)!.value,
             freefornft: (document.getElementById('freefornft') as HTMLInputElement)!.value,
-            mintPrice: (document.getElementById('mprice') as HTMLInputElement)!.value
+            mintPrice: (document.getElementById('mprice') as HTMLInputElement)!.value,
+            paymentAddress: (document.getElementById('waddress') as HTMLInputElement)!.value
           });
 
         set(ref(db, 'activeStreams/' + userName), data.id)

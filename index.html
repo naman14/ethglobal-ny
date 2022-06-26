@@ -4,46 +4,101 @@
     <meta charset="UTF-8" />
     <title>Switch</title>
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+
   </head>
-  <body>
-    <h1>Switch</h1>
+  <body style="background-color: #0E0F18; font-family: 'Chakra Petch', sans-serif; color: white; padding-left: 15px;">
 
-    <form>
-      <label for="sname">Stream title:</label><br>
-      <input type="text" id="sname" name="sname"><br>
+    <h2>Stream Settings</h2>
 
-      <label for="freefor">Free for: (minutes)</label><br>
-      <input type="number" step="any" id="freefor" name="freefor"><br>
-
-      <label for="sprice">Stream price: (DAI per minute)</label><br>
-      <input type="number" step="any" id="sprice" name="sprice"><br>
+    <div style="display: flex; flex-direction: row;">
     
-      <input type="submit" value="Start streaming" onclick="startStream()">
+      <div>
+        <p style="color: #636895; margin: 0px;">Set stream price (USD/minute)</p>
+        <input style="width: 223px; color: white;
+        height: 42px;
+        background: #191B2B;
+        border: none;
+        outline: none;
+        border-radius: 10px; margin: 0px; margin-top: 5px;"
+        type="tel" step="any" id="sprice" name="sprice"><br>
 
-
-    </form>
-
-    <div id="stream-key-details-container" style="visibility: hidden;">
-      <h3>Stream is ready. Enter the following RTMP url and stream key in OBS to start streaming</h3>
-      <p>url: rtmp://rtmp.livepeer.com/live</p>
-
-      <div style="display: flex; justify-content: start">
-        <p style="">Stream key: </p>
-        <p style="" id="stream-key"></p>
       </div>
+
+      <div style="margin-left: 100px;">
+        <p style="color: #636895; margin: 0px;">Set free time (minutes)</p>
+        <input style="width: 223px; color: white;
+        height: 42px;
+        background: #191B2B;
+        border: none;
+        outline: none;
+        border-radius: 10px; margin: 0px; margin-top: 5px;" type="tel" step="any" id="freefor" name="freefor"><br>
+      </div>
+
     </div>
 
 
-    <h2>Drop live NFTs</h2>
+    <h2>Drop NFTS</h2>
 
-    <form>
-      <label for="mprice">Mint price (ETH)</label><br>
-      <input type="number" step="any" id="mprice" name="mprice"><br>
+    <div style="display: flex; flex-direction: row;">
+    
+      <div>
+        <p style="color: #636895; margin: 0px;">NFT mint price (Ether)</p>
+        <input style="width: 223px; color: white;
+        height: 42px;
+        background: #191B2B;
+        border: none;
+        outline: none;
+        border-radius: 10px; margin: 0px; margin-top: 5px;"
+        type="tel" step="any" id="mprice" name="mprice"><br>
 
-      <label for="freefornft">NFT holder bonus watch time: (minutes)</label><br>
-      <input type="number" step="any" id="freefornft" name="freefornft"><br>
+      </div>
 
-    </form>
+      <div style="margin-left: 100px;">
+        <p style="color: #636895; margin: 0px;">NFT holder bonus watch time (minutes)</p>
+        <input style="width: 223px; color: white;
+        height: 42px;
+        background: #191B2B;
+        border: none;
+        outline: none;
+        border-radius: 10px; margin: 0px; margin-top: 5px;" type="tel" step="any" id="freefornft" name="freefornft"><br>
+      </div>
+
+    </div>
+
+    <p style="color: #636895; margin-top: 20px;">Wallet address</p>
+    <input style="width: 500px; color: white;
+    height: 42px;
+    background: #191B2B;
+    border: none;
+    outline: none;
+    border-radius: 10px; margin: 0px; margin-top: 0px;"
+    type="text" id="waddress" name="waddress" placeholder="0x16b1025cD1A83141bf93E47dBC316f34f27f2e76"><br>
+
+
+    <button id='stream-button' onclick="startStream()" type="button" 
+    style="background-color: #4A7DFF; color: white; margin-top: 20px; font-size: 20px; border: none;
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-radius: 2px;
+" >Start streaming</button>
+
+
+    <div id="stream-key-details-container" style="visibility: hidden; margin-top: 50px;">
+      <h4>Stream is ready. Enter the following RTMP url and stream key in OBS to start streaming</h4>
+      <p style="margin: 0px;">Stream url: rtmp://rtmp.livepeer.com/live</p>
+
+      <div style="display: flex; justify-content: start; margin-top: 0px;">
+        <p style="margin: 0px;">Stream key: </p>
+        <p style="margin: 0px; margin-left: 10px;" id="stream-key"></p>
+      </div>
+    </div>
 
 
     <p id="new-video"></p>
