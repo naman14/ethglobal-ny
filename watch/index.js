@@ -4,12 +4,18 @@ import { get, ref, getDatabase, onValue, push, set } from "https://cdnjs.cloudfl
 
 import * as superfluid from 'https://cdn.skypack.dev/pin/@superfluid-finance/sdk-core@v0.4.2-IVr6JAGzcFoFBoUZkPy5/mode=imports/optimized/@superfluid-finance/sdk-core.js'
 
-import { ethers } from "https://cdn.ethers.io/lib/ethers-5.2.esm.min.js";
+import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.6.9/ethers.esm.js";
 
 const LIVEPEER_API_KEY = "96723baa-ee6f-4c6b-869b-0a110f8e27a6"
 
 const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get('u');
+
+
+if (username == '') {
+    username = 'naman'
+  }
+  
 
 console.log('user: ' + username)
 
