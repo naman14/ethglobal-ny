@@ -15,13 +15,21 @@ console.log('user: ' + username)
 
 let db;
 let currentNft;
+let streamInfo;
+let sf;
+let provider;
+let signer;
 
-// initialiseDB()
-// fetchStream(username)
-// watchNftDrops()
-// watchChat()
+const paymentAddress = "0xCE9F8B4E91582bFF8cD4C2eB0C811e918779715a"
+const supertokenAddress = "0x96b82b65acf7072efeb00502f45757f254c2a0d4"
+const sender = "0x16b1025cD1A83141bf93E47dBC316f34f27f2e76"
 
-setupSuperfluid()
+initialiseDB()
+initialiseSuperfluid()
+fetchStream(username)
+watchNftDrops()
+watchChat()
+
 
 function initialiseDB() {
     const firebaseConfig = {
@@ -38,29 +46,29 @@ function initialiseDB() {
       const app = initializeApp(firebaseConfig);
       db = getDatabase(app)
       console.log('initialised')
-
 }
 
-async function setupSuperfluid() {
-    const config = {
-        hostAddress: "0x3E14dC1b13c488a8d5D310918780c983bD5982E7",
-        cfaV1Address: "0x6EeE6060f715257b970700bc2656De21dEdF074C",
-        idaV1Address: "0xB0aABBA4B2783A72C52956CDEF62d438ecA2d7a1"
-      };
-      
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const sf = await superfluid.Framework.create({
+async function initialiseSuperfluid() {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    sf = await superfluid.Framework.create({
         networkName: "polygon-mumbai",
         provider: provider
       });
 
-    const signer = sf.createSigner({ web3Provider: provider });
+    signer = sf.createSigner({ web3Provider: provider });
 
-    const paymentAddress = "0xCE9F8B4E91582bFF8cD4C2eB0C811e918779715a"
-    const supertokenAddress = "0x96b82b65acf7072efeb00502f45757f254c2a0d4"
-    const cfa = sf.cfaV1
-    console.log(cfa)
+    setupPaywall()
 
+}
+
+document.getElementById('subscribe-button').addEventListener('click', function() {
+    document.getElementById('subscribe-button').innerHTML = 'Processing...'
+    startSuperfluidStream()
+ }, false);
+
+async function startSuperfluidStream() {
+      
+   
     const maticx = await sf.loadSuperToken(supertokenAddress)
 
     const approveOp = maticx.approve({ receiver: paymentAddress, amount: "10000" });
@@ -75,6 +83,11 @@ async function setupSuperfluid() {
     const txn = await batchCall.exec(signer);
     const txnReceipt = await txn.wait();
     console.log(txnReceipt)
+
+    let newChatRef = push(ref(db, 'chats/' + username))
+    set(newChatRef, 'New payment subscription!: ' + '0x16b1025cD1A83141bf93E47dBC316f34f27f2e76');
+
+    document.getElementById('paywall-overlay').style.visibility = 'hidden'
 }
 
     
@@ -84,7 +97,6 @@ function fetchStream(username) {
     console.log(db)
     console.log('checking active streams')
 
-    return
     get(ref(db, 'activeStreams/' + username)).then((snapshot) => {
         console.log(snapshot)
         if (snapshot.exists()) {
@@ -97,11 +109,12 @@ function fetchStream(username) {
 
           get(ref(db, 'streams/' + username + '/' + streamId)).then((snapshot) => {
 
-            let streamInfo = snapshot.val()
-            
+            streamInfo = snapshot.val()
+
             document.getElementById('freefor-text').innerHTML = streamInfo.freefor + ' minutes'
             document.getElementById('sprice-text').innerHTML = streamInfo.price + ' Ξ/min'
-            document.getElementById('nft-count-text').innerHTML = '1'
+            document.getElementById('sprice-text-overlay').innerHTML = streamInfo.price + ' Ξ/min'
+            document.getElementById('nft-count-text').innerHTML = '5'
 
             getStreamStatus(LIVEPEER_API_KEY, streamId).then((response) => {
                 console.log(response.data)
@@ -121,6 +134,8 @@ function fetchStream(username) {
                 document.getElementById('stream-title').innerHTML = streamInfo.title
               })
 
+              setupPaywall()
+
           }).catch((error) => {
             console.error(error);
         });
@@ -131,6 +146,25 @@ function fetchStream(username) {
       }).catch((error) => {
         console.error(error);
       });
+}
+
+
+async function setupPaywall() {
+
+    // let flowInfo = await sf.cfaV1.getFlow({
+    //     supertokenAddress,
+    //     sender,
+    //     paymentAddress,
+    //     providerOrSigner: provider
+    //   });
+
+    // console.log(flowInfo)
+
+    let freeTime =  streamInfo.freefor
+
+    setTimeout(() => {
+        document.getElementById('paywall-overlay').style.visibility = 'visible'
+    }, Number(freeTime) * 60 * 1000)
 }
 
 function watchNftDrops() {
@@ -184,7 +218,6 @@ function watchChat() {
 }
 
 document.getElementById('mint-nft-button').addEventListener('click', function() {
-    
     mintNft()
  }, false);
 
@@ -224,6 +257,9 @@ async function mintNft() {
 
         let newChatRef = push(ref(db, 'chats/' + username))
         set(newChatRef, 'NFT minted! '+ nftInfo.opensea.tokenUrl);
+
+        document.getElementById('paywall-overlay').style.visibility = 'hidden'
+
     }
 }
 

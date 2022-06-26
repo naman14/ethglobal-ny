@@ -19,6 +19,26 @@
   
   <body style="font-family: 'Chakra Petch', sans-serif; background-color: grey; color: white;">
 
+    <div id='paywall-overlay' style="visibility: hidden; background-color: #421368; width: 770px; height: 433px;position: absolute; left: 28px; top: 20px; z-index: 1000; justify-content: center; text-align: center;">
+        <h2 style="display:flex; justify-content: center; text-align: center; margin-top: 130px; font-weight: bold;">
+            CONNECT WALLET AND SUBSCRIBE <br>TO CONTINUE WATCHING THE STREAM
+        </h2>
+
+        <p id='sprice-text-overlay' style="color: white; font-size: 18px; line-height: 23px;display: flex;
+            align-items: center;
+            margin: 0px;
+            display:flex; justify-content: center; text-align: center;
+    
+            ">0.001 Ξ/min</p>
+
+        <button id='subscribe-button' style="width: 219px; justify-content: center; text-align: center; margin-top: 25px;
+        height: 45px;        
+        background: linear-gradient(90.07deg, #3999F9 29.06%, #4A7DFF 96.96%);
+        border: 0;
+        border-radius: 12px; color: white; font-size: 16px;">Subscribe</button>
+
+    </div>
+
     <div style="flex-direction: row; display: flex; margin: 20px;">
     
         <div style="flex-direction: column; display: flex; background: #0E0F18;
@@ -26,20 +46,25 @@
         margin: 0px;
         border-radius: 24px; height: 600px;">
 
-
+        <div>
             <video
-
-                id="video"
-                class="video-js vjs-default-skin vjs-big-play-centered"
-                controls
-                autoplay="true"
-                preload="auto"
-                width="770"
-                height="433"
-                data-setup="{}"
+            id="video"
+            style="z-index: 100;"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            controls
+            autoplay="true"
+            preload="auto"
+            width="770"
+            height="433"
+            data-setup="{}"
+        
             >
-            </video>
+        </video>
 
+        </div>
+          
+
+         
             <div>
                 <h4 
                 id="stream-title"
