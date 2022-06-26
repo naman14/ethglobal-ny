@@ -68,7 +68,8 @@ function startStream() {
         let data = response.data
         
 
-        let newRef = push(ref(db, 'streams/' + userName))
+        let newRef = child(ref(db, 'streams/' + userName), data.id)
+        
         set(newRef, {
             creator: userName,
             active: true,

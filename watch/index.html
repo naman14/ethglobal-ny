@@ -3,10 +3,19 @@
   
     <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
     <!-- <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->
+    <link href="https://unpkg.com/@videojs/themes@1/dist/sea/index.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
 
     <script type="module">
+        import '@videojs/themes/dist/sea/index.css';
+
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
+        import { initializeApp, } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
+        import { get, getDatabase, ref, set, push } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.4/firebase-database.min.js"
+
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
       
@@ -17,36 +26,164 @@
           projectId: "switch-ethglobal",
           storageBucket: "switch-ethglobal.appspot.com",
           messagingSenderId: "555921925609",
-          appId: "1:555921925609:web:b39a9fe5de5d3912a21778"
+          appId: "1:555921925609:web:b39a9fe5de5d3912a21778",
+          databaseURL: "https://switch-ethglobal-default-rtdb.firebaseio.com"
         };
       
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-      </script>
-      
+        const db = getDatabase(app)
+        window.db = db
+    </script>
+
   </head>
   
-  <body>
-    <video
-      id="my-video"
-      class="video-js"
-      controls
-      preload="auto"
-      width="640"
-      height="264"
-      poster="MY_VIDEO_POSTER.jpg"
-      data-setup="{}"
-    >
-      <source src="MY_VIDEO.mp4" type="video/mp4" />
-      <source src="MY_VIDEO.webm" type="video/webm" />
-      <p class="vjs-no-js">
-        To view this video please enable JavaScript, and consider upgrading to a
-        web browser that
-        <a href="https://videojs.com/html5-video-support/" target="_blank"
-          >supports HTML5 video</a
-        >
-      </p>
-    </video>
+  <body style="font-family: 'Chakra Petch', sans-serif; background-color: grey;">
+
+    <div style="flex-direction: row; display: flex; margin: 20px;">
+    
+        <div style="flex-direction: column; display: flex; background: #0E0F18;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 24px;">
+
+
+            <video
+
+                id="video"
+                class="video-js vjs-theme-city"
+                controls
+                autoplay="true"
+                preload="auto"
+                width="770"
+                height="433"
+                data-setup="{}"
+            >
+            </video>
+
+            <div>
+                <h4 
+                id="stream-title"
+            
+                style="font-family: 'Chakra Petch';
+                font-style: normal;
+                font-weight: 700;
+                font-size: 22px;
+                line-height: 90.1%;
+                /* identical to box height, or 20px */
+                
+                text-transform: uppercase;
+                
+                color: #FFFFFF;
+                margin: 20px;">
+
+                STREAM BY NAMAN
+                </h4>
+
+                <div style="display: flex; flex-direction: row">
+
+                    <div style="width: 145.91px;
+                    height: 71px;
+                    left: 24px;
+                    top: 502px;
+                    
+                    background: #191B2B;
+                    border-radius: 10px;
+                    margin-left: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;">
+
+                        <p style="color: white; font-size: 18px; line-height: 23px;display: flex;
+                        align-items: center;
+                        margin: 0px;
+        
+                        ">00:00:00</p>
+                        <p style="color: #636895; line-height: 18px; margin: 0px; font-size: 14px;
+                        ">Free stream ends</p>
+                    </div>
+    
+                    <div style="width: 145.91px;
+                    height: 71px;
+                    left: 24px;
+                    top: 502px;
+                    
+                    background: #191B2B;
+                    border-radius: 10px;
+                    margin-left: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;">
+
+
+                        <p style="color: white; font-size: 18px; line-height: 23px;display: flex;
+                        align-items: center;
+                        margin: 0px;
+                    
+                        ">0.001 Ξ/min</p>
+                        <p style="color: #636895; line-height: 18px; margin: 0px; font-size: 14px;
+                        ">Stream price</p>
+                    </div>
+
+                   <div style="width: 145.91px;
+                    height: 71px;
+                    left: 24px;
+                    top: 502px;
+                    
+                    background: #191B2B;
+                    border-radius: 10px;
+                    margin-left: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;">
+
+                        <p style="color: white; font-size: 18px; line-height: 23px;display: flex;
+                        align-items: center;
+                        margin: 0px;
+                
+                        ">0</p>
+                        <p style="color: #636895; line-height: 18px; margin: 0px; font-size: 14px;
+                        ">NFTs minted</p>
+                    </div>
+                </div>
+               
+            </div>
+
+            <div>
+                <h2>NFT Drops</h2>
+            </div>
+        </div>
+       
+
+      <div style="
+      width: 373px;
+      height: 596px;
+      margin-left: 20px;
+      
+      background: #0E0F18;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 24px; padding: 20px;">
+
+
+          <h2 style="font-family: 'Chakra Petch';
+          font-style: normal;
+          font-weight: 700;
+          font-size: 22px;
+          line-height: 90.1%;
+          /* identical to box height, or 20px */
+
+          text-transform: uppercase;
+          
+          color: #FFFFFF;">Live Chat</h2>
+      </div>
+
+    </div>
+  
   
     <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+
+    <script type="module" src="./index.js"></script>
   </body>
